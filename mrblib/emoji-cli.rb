@@ -38,9 +38,12 @@ end
 def copy emoji
   os = `uname`.strip
   cmd = if os == "Darwin"
-    "echo '#{emoji}' | tr -d '\n' | pbcopy"
+    "pbcopy"
   else
-    "echo '#{emoji}' | tr -d '\n' | xclip -i"
+    "xclip -i"
   end
-  `#{cmd}`
+
+  IO.popen(cmd, "w") do |selection|
+    selection.print emoji
+  end
 end
